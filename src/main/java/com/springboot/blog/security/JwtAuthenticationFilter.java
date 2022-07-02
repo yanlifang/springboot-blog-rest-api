@@ -32,20 +32,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = getJWTfromRequest(request);
 
         //validate token
-        if(StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
 
-            //get username from token
-            String username = tokenProvider.getUsernameFromJWT(token);
-            //load user associated with token
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+        if (StringUtils.hasText(token) &&  tokenProvider.validateToken(token)) {
 
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities()
-            );
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            //set spring security
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        }
+                //get username from token
+                String username = tokenProvider.getUsernameFromJWT(token);
+                //load user associated with token
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities()
+                );
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                //set spring security
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
         filterChain.doFilter(request, response);
 
     }
@@ -55,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String bearerToken = request.getHeader("Authorization");
 
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7, bearerToken.length());
         }
         return null;
