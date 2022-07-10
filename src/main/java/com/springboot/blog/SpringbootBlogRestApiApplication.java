@@ -1,12 +1,16 @@
 package com.springboot.blog;
 
+import com.springboot.blog.entity.Role;
+import com.springboot.blog.repository.RoleRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-public class SpringbootBlogRestApiApplication {
+public class SpringbootBlogRestApiApplication implements CommandLineRunner {
 
 	@Bean
 	public ModelMapper modelMapper(){
@@ -16,10 +20,14 @@ public class SpringbootBlogRestApiApplication {
 		SpringApplication.run(SpringbootBlogRestApiApplication.class, args);
 	}
 
-
-
+	@Autowired
+	private RoleRepository roleRepository;
 
 	/*
+	use this to create roles, first go to mysql, create database name; then run application-dev.properties;
+	 */
+
+
 	@Override
 	public void run(String... args) throws Exception {
 		Role adminRole = new Role();
@@ -30,7 +38,6 @@ public class SpringbootBlogRestApiApplication {
 		userRole.setName("ROLE_USER");
 		roleRepository.save(userRole);
 	}
-*/
 
 
 }
